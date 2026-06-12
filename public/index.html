@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrepEdge — SAT & AP Math</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#080A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PrepEdge">
+<link rel="apple-touch-icon" href="/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080A0F;
+  --s1:#0D1117;
+  --s2:#161B26;
+  --s3:#1E2535;
+  --s4:#252D40;
+  --s5:#2E3850;
+  --blue:#5B8DEF;
+  --purple:#A78BFA;
+  --green:#34D399;
+  --yellow:#FBBF24;
+  --red:#F87171;
+  --text:#F0F4FF;
+  --t2:#8892A4;
+  --t3:#3D4A5C;
+  --border:rgba(255,255,255,0.05);
+  --border2:rgba(255,255,255,0.09);
+  --border3:rgba(255,255,255,0.14);
+  --r:14px;--r2:9px;--r3:24px;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow:hidden}
+button{cursor:pointer;border:none;outline:none;font-family:'Inter',sans-serif}
+input,select,textarea{font-family:'Inter',sans-serif}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--s5);border-radius:2px}
+
+/* ── LAYOUT ── */
+.shell{display:flex;height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{width:248px;min-width:248px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:width .2s}
+.brand{padding:22px 20px 18px;border-bottom:1px solid var(--border)}
+.brand-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);font-family:'Space Grotesk',sans-serif;margin-bottom:5px}
+.brand-name{font-size:23px;font-weight:700;font-family:'Space Grotesk',sans-serif;letter-spacing:-.3px;background:linear-gradient(130deg,#5B8DEF 0%,#A78BFA 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.brand-tag{font-size:11px;color:var(--t3);margin-top:2px}
+
+.profile-mini{margin:14px 12px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);padding:13px 14px;cursor:pointer;transition:all .15s}
+.profile-mini:hover{border-color:var(--border3)}
+.profile-mini.empty{border-style:dashed;text-align:center;color:var(--t3);font-size:12px}
+.profile-mini.empty:hover{border-color:var(--blue);color:var(--blue)}
+.pm-name{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:2px}
+.pm-meta{font-size:11px;color:var(--t2);margin-bottom:8px}
+.pm-tags{display:flex;gap:4px;flex-wrap:wrap}
+.pm-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--s3);color:var(--t2)}
+.pm-tag.b{background:rgba(91,141,239,.15);color:var(--blue)}
+.pm-tag.p{background:rgba(167,139,250,.15);color:var(--purple)}
+
+.nav{flex:1;padding:6px 0;overflow-y:auto}
+.nav-sec{padding:14px 20px 4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);font-family:'Space Grotesk',sans-serif}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:var(--t2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none;border-radius:0 var(--r2) var(--r2) 0;margin:1px 8px 1px 0}
+.ni:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.ni.on{color:var(--blue);background:rgba(91,141,239,.08);border-left-color:var(--blue)}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
+.ni.on svg{opacity:1}
+.ni-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:8px;font-weight:600}
+
+.sidebar-foot{padding:14px 18px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.status-lbl{font-size:11px;color:var(--t3)}
+
+/* ── MAIN ── */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.page{display:none;flex:1;flex-direction:column;overflow:hidden}
+.page.on{display:flex}
+.ph{padding:26px 36px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ph-title{font-size:23px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:3px}
+.ph-sub{font-size:13px;color:var(--t2)}
+.pb{padding:28px 36px;flex:1;overflow-y:auto}
+
+/* ── ONBOARDING ── */
+.ob-shell{flex:1;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:32px}
+.ob-card{background:var(--s1);border:1px solid var(--border2);border-radius:var(--r);padding:36px 40px;width:100%;max-width:500px;box-shadow:var(--shadow)}
+.ob-step{display:none}
+.ob-step.on{display:block}
+.ob-progress{display:flex;gap:5px;margin-bottom:28px}
+.ob-dot{flex:1;height:3px;border-radius:2px;background:var(--s4);transition:all .3s}
+.ob-dot.on{background:var(--blue)}
+.ob-title{font-size:24px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin-bottom:6px;line-height:1.3}
+.ob-sub{font-size:13px;color:var(--t2);margin-bottom:28px;line-height:1.6}
+
+/* ── FORMS ── */
+.fg{margin-bottom:18px}
+.fl{display:block;font-size:11px;font-weight:500;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em}
+.fi{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);padding:11px 14px;color:var(--text);font-size:14px;transition:border-color .15s}
+.fi:focus{outline:none;border-color:var(--blue)}
+.fi::placeholder{color:var(--t3)}
+.fs{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);padding:11px 14px;color:var(--text);font-size:14px;appearance:none;cursor:pointer;transition:border-color .15s}
+.fs:focus{outline:none;border-color:var(--blue)}
+
+/* OPTION CARDS */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.oc{background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px 15px;cursor:pointer;transition:all .15s;text-align:left}
+.oc:hover{border-color:var(--border3);background:var(--s3)}
+.oc.on{border-color:rgba(91,141,239,.5);background:rgba(91,141,239,.07)}
+.oc-icon{font-size:20px;margin-bottom:8px}
+.oc-title{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:2px}
+.oc-sub{font-size:11px;color:var(--t2)}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;background:var(--s2);color:var(--t2);border:1px solid var(--border2);cursor:pointer;transition:all .15s;user-select:none}
+.chip:hover{border-color:var(--border3);color:var(--text)}
+.chip.on{background:rgba(91,141,239,.12);color:var(--blue);border-color:rgba(91,141,239,.35)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--r2);font-size:14px;font-weight:500;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#4A7DE0;transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border3)}
+.btn-subtle{background:var(--s2);color:var(--t2);border:1px solid var(--border2)}
+.btn-subtle:hover{background:var(--s3);color:var(--text)}
+.btn-green{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.2)}
+.btn-lg{padding:13px 28px;font-size:15px;border-radius:var(--r)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:var(--r2)}
+.btn-full{width:100%}
+
+/* ── DASHBOARD ── */
+.dash-greeting{font-size:22px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:3px}
+.dash-date{font-size:13px;color:var(--t2);margin-bottom:24px}
+
+/* COUNTDOWN BANNER */
+.countdown-banner{background:linear-gradient(135deg,rgba(91,141,239,.12),rgba(167,139,250,.08));border:1px solid rgba(91,141,239,.2);border-radius:var(--r);padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:20px}
+.cd-days{font-size:36px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--blue);flex-shrink:0;line-height:1}
+.cd-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.cd-text{flex:1}
+.cd-title{font-size:14px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:3px}
+.cd-sub{font-size:12px;color:var(--t2)}
+.cd-urgency{padding:4px 10px;border-radius:10px;font-size:11px;font-weight:500}
+.cd-urgency.high{background:rgba(248,113,113,.12);color:var(--red)}
+.cd-urgency.med{background:rgba(251,191,36,.12);color:var(--yellow)}
+.cd-urgency.low{background:rgba(52,211,153,.12);color:var(--green)}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px}
+.kpi-val{font-size:22px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:3px;line-height:1}
+.kpi-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.07em}
+
+/* SCORE TRAJECTORY */
+.trajectory{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:20px}
+.traj-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.traj-title{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif}
+.traj-scores{display:flex;gap:16px}
+.traj-score{text-align:center}
+.traj-score-val{font-size:18px;font-weight:600;font-family:'Space Grotesk',sans-serif}
+.traj-score-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.traj-bar-wrap{position:relative;height:6px;background:var(--s4);border-radius:3px;overflow:visible;margin-top:8px}
+.traj-bar-fill{height:100%;background:var(--blue);border-radius:3px;transition:width .8s}
+.traj-bar-target{position:absolute;top:-3px;width:2px;height:12px;background:var(--purple);border-radius:1px}
+.traj-legend{display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--t2)}
+.traj-legend span{display:flex;align-items:center;gap:5px}
+.traj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* DAILY GOAL */
+.goal-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.goal-ring{flex-shrink:0;position:relative;width:52px;height:52px}
+.goal-ring svg{transform:rotate(-90deg)}
+.goal-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'Space Grotesk',sans-serif}
+.goal-info{flex:1}
+.goal-title{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:2px}
+.goal-sub{font-size:11px;color:var(--t2)}
+
+/* TOPIC GRID */
+.section-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;font-family:'Space Grotesk',sans-serif}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px;margin-bottom:24px}
+.tc{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--tc,var(--blue))}
+.tc:hover{border-color:var(--border2);background:var(--s2);transform:translateY(-1px)}
+.tc-icon{font-size:20px;margin-bottom:9px}
+.tc-name{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:2px}
+.tc-meta{font-size:11px;color:var(--t2);margin-bottom:8px}
+.tc-bar{height:2px;background:var(--s4);border-radius:1px;overflow:hidden}
+.tc-fill{height:100%;border-radius:1px;transition:width .5s}
+.tc-score{font-size:10px;color:var(--t3);margin-top:4px}
+
+/* SPACED REPETITION ALERT */
+.sr-alert{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;font-size:12px;cursor:pointer;transition:all .15s}
+.sr-alert:hover{background:rgba(251,191,36,.12)}
+
+/* ── QUIZ CONFIG ── */
+.qc-wrap{max-width:580px}
+.step-dots{display:flex;gap:5px;margin-bottom:26px}
+.sd{width:22px;height:3px;border-radius:2px;background:var(--s4);transition:all .3s}
+.sd.on{background:var(--blue)}
+.qs{display:none}
+.qs.on{display:block}
+.qs-title{font-size:17px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:3px}
+.qs-sub{font-size:13px;color:var(--t2);margin-bottom:22px}
+
+.diff-row{display:flex;gap:7px}
+.dp{flex:1;padding:11px 6px;border-radius:var(--r2);font-size:12px;text-align:center;background:var(--s2);color:var(--t2);border:1px solid var(--border2);cursor:pointer;transition:all .15s;font-weight:500}
+.dp:hover{border-color:var(--border3)}
+.dp[data-d=easy].on{background:rgba(52,211,153,.09);color:var(--green);border-color:rgba(52,211,153,.3)}
+.dp[data-d=medium].on{background:rgba(251,191,36,.09);color:var(--yellow);border-color:rgba(251,191,36,.3)}
+.dp[data-d=hard].on{background:rgba(248,113,113,.09);color:var(--red);border-color:rgba(248,113,113,.3)}
+.dp[data-d=adaptive].on{background:rgba(167,139,250,.09);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+.timer-opts{display:flex;gap:8px}
+.to{flex:1;padding:13px 10px;border-radius:var(--r2);background:var(--s2);border:1px solid var(--border2);cursor:pointer;transition:all .15s;text-align:center}
+.to:hover{border-color:var(--border3)}
+.to.on{background:rgba(91,141,239,.07);border-color:rgba(91,141,239,.3)}
+.to-icon{font-size:18px;margin-bottom:4px}
+.to-label{font-size:12px;font-weight:500;color:var(--text)}
+.to-sub{font-size:10px;color:var(--t2);margin-top:2px}
+
+/* ── AGENT PLANNING ── */
+.agent-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:14px}
+.ac-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.ac-avatar{width:36px;height:36px;border-radius:50%;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ac-name{font-size:14px;font-weight:500;font-family:'Space Grotesk',sans-serif}
+.ac-status{font-size:11px;color:var(--t2)}
+.plan-list{display:flex;flex-direction:column;gap:5px}
+.pl{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;background:var(--s2);border-radius:var(--r2);font-size:12px;color:var(--t2);transition:all .25s;border:1px solid transparent}
+.pl.done{color:var(--text);background:var(--s3)}
+.pl.active{border-color:rgba(91,141,239,.15)}
+.pl-spin{width:13px;height:13px;border:1.5px solid var(--border3);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;margin-top:1px}
+.pl-check{width:13px;height:13px;color:var(--green);flex-shrink:0;margin-top:1px}
+.pl-wait{width:13px;height:13px;flex-shrink:0;margin-top:1px;opacity:.2}
+@keyframes spin{to{transform:rotate(360deg)}}
+.time-rec{margin-top:14px;padding:11px 15px;background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.15);border-radius:var(--r2);font-size:12px;color:var(--purple);line-height:1.7}
+.time-rec strong{color:var(--text);font-weight:500}
+
+/* ── QUIZ ── */
+.quiz-shell{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.quiz-top{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-shrink:0}
+.qt-info{min-width:0;flex:1}
+.qt-topic{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qt-num{font-size:11px;color:var(--t2)}
+.qt-prog{flex:1;max-width:260px}
+.prog-track{height:3px;background:var(--s4);border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .4s}
+.prog-nums{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px}
+.timer-ring{flex-shrink:0;position:relative;width:50px;height:50px}
+.timer-ring svg{transform:rotate(-90deg)}
+.tr-bg{fill:none;stroke:var(--s4);stroke-width:3.5}
+.tr-arc{fill:none;stroke:var(--blue);stroke-width:3.5;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .4s}
+.tr-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-family:'Space Grotesk',sans-serif}
+
+.quiz-body{flex:1;overflow-y:auto;display:flex;justify-content:center;padding:28px 24px}
+.q-wrap{width:100%;max-width:620px}
+.q-tags{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap}
+.q-tag{font-size:10px;padding:3px 9px;border-radius:10px;background:var(--s2);color:var(--t2);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.q-tag.b{background:rgba(91,141,239,.1);color:var(--blue)}
+.q-tag.p{background:rgba(167,139,250,.1);color:var(--purple)}
+.q-text{font-size:18px;font-weight:500;font-family:'Space Grotesk',sans-serif;line-height:1.6;margin-bottom:22px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:13px 17px;background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:all .15s;text-align:left;width:100%}
+.opt:hover:not(:disabled){border-color:var(--border3);background:var(--s2)}
+.opt.picked{border-color:rgba(91,141,239,.4);background:rgba(91,141,239,.06)}
+.opt.right{border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.05)}
+.opt.wrong{border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.05)}
+.opt-key{width:26px;height:26px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;font-family:'Space Grotesk',sans-serif;transition:all .15s}
+.opt.picked .opt-key{background:var(--blue);color:#fff}
+.opt.right .opt-key{background:var(--green);color:#0D1117}
+.opt.wrong .opt-key{background:var(--red);color:#fff}
+.opt-body{flex:1;font-size:14px;line-height:1.5;padding-top:3px;color:var(--text)}
+
+.explain{margin-top:14px;background:var(--s2);border-left:2px solid var(--green);border-radius:0 var(--r2) var(--r2) 0;padding:13px 16px;font-size:13px;color:var(--t2);line-height:1.75;display:none}
+.explain.on{display:block}
+.explain strong{color:var(--text);font-weight:500}
+.sat-tip{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--t3)}
+.sat-tip strong{color:var(--purple)}
+
+.adapt-notice{margin-top:10px;padding:8px 13px;background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.15);border-radius:var(--r2);font-size:11px;color:var(--purple);display:none;align-items:center;gap:7px}
+.adapt-notice.on{display:flex}
+
+.q-nav{display:flex;justify-content:flex-end;margin-top:18px}
+
+/* ── RESULTS ── */
+.results-wrap{max-width:640px;margin:0 auto}
+.r-hero{text-align:center;padding:28px 0 20px}
+.r-ring{width:108px;height:108px;margin:0 auto 14px;position:relative}
+.r-ring svg{transform:rotate(-90deg)}
+.r-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r-pct{font-size:25px;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.r-lbl{font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:.08em}
+.r-headline{font-size:19px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:4px}
+.r-tagline{font-size:13px;color:var(--t2)}
+
+.r-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}
+.rk{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:13px;text-align:center}
+.rk-val{font-size:19px;font-weight:600;font-family:'Space Grotesk',sans-serif;margin-bottom:3px;line-height:1}
+.rk-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+
+/* SCORE PROJECTION */
+.score-proj{background:rgba(91,141,239,.06);border:1px solid rgba(91,141,239,.14);border-radius:var(--r2);padding:16px 18px;margin-bottom:18px}
+.sp-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:12px}
+.sp-row{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.sp-lbl{font-size:12px;color:var(--t2);width:110px;flex-shrink:0}
+.sp-track{flex:1;height:5px;background:var(--s4);border-radius:3px;overflow:hidden}
+.sp-fill{height:100%;border-radius:3px;transition:width .8s}
+.sp-val{font-size:12px;font-weight:600;font-family:'Space Grotesk',sans-serif;width:36px;text-align:right;flex-shrink:0}
+
+/* AGENT FEEDBACK */
+.fb-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:18px}
+.fb-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fb-title{font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif}
+.fb-sub{font-size:11px;color:var(--t2)}
+.fb-body{font-size:13px;color:var(--t2);line-height:1.8}
+.fb-body strong{color:var(--text);font-weight:500}
+
+/* SPACED REP NOTICE */
+.sr-notice{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--yellow);line-height:1.6}
+.sr-notice strong{color:var(--text)}
+
+/* REVIEW */
+.rv{display:flex;gap:11px;padding:11px 14px;border-radius:var(--r2);margin-bottom:6px;font-size:12px}
+.rv.ok{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1)}
+.rv.bad{background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.1)}
+.rv.to{background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.1)}
+.rv-icon{font-size:13px;flex-shrink:0;margin-top:2px}
+.rv-q{font-weight:500;color:var(--text);margin-bottom:3px;font-size:13px;line-height:1.4}
+.rv-d{color:var(--t2)}
+.rv-d span{color:var(--green)}
+.rv-t{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* ── TUTOR ── */
+.tutor-shell{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.tutor-top{padding:14px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.tutor-msgs{flex:1;overflow-y:auto;padding:22px 28px;display:flex;flex-direction:column;gap:14px}
+.msg-u{align-self:flex-end;max-width:480px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r) var(--r2) var(--r2) var(--r);padding:11px 15px;font-size:14px;line-height:1.6}
+.msg-a-wrap{align-self:flex-start;max-width:560px}
+.msg-a-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.ai-av{width:23px;height:23px;border-radius:50%;background:rgba(167,139,250,.12);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--purple);font-family:'Space Grotesk',sans-serif;flex-shrink:0}
+.ai-name{font-size:11px;color:var(--t2)}
+.msg-a-body{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2) var(--r) var(--r) var(--r);padding:13px 16px;font-size:14px;color:var(--t2);line-height:1.75}
+.msg-a-body strong{color:var(--text);font-weight:500}
+.msg-a-body code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--s3);padding:1px 5px;border-radius:3px;color:var(--blue)}
+.msg-a-body .step{background:var(--s2);border-left:2px solid var(--blue);border-radius:0 var(--r2) var(--r2) 0;padding:9px 13px;margin:8px 0;font-size:13px}
+
+.tutor-hints{padding:8px 28px 0;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.hint{font-size:11px;padding:5px 12px;background:var(--s2);border:1px solid var(--border2);border-radius:14px;color:var(--t2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.hint:hover{border-color:var(--border3);color:var(--text)}
+
+.tutor-input-wrap{padding:14px 28px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+.tutor-ta{flex:1;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r);padding:11px 15px;color:var(--text);font-size:14px;resize:none;line-height:1.5;min-height:44px;max-height:120px;transition:border-color .15s}
+.tutor-ta:focus{outline:none;border-color:var(--blue)}
+.tutor-ta::placeholder{color:var(--t3)}
+
+.typing{display:flex;gap:4px;padding:4px 0}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--t3);animation:blink 1.3s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* ── PROGRESS ── */
+.prog-section{margin-bottom:28px}
+.prog-sec-title{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;font-family:'Space Grotesk',sans-serif}
+.hi{display:flex;align-items:center;gap:13px;padding:11px 14px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:6px}
+.hi-score{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;font-family:'Space Grotesk',sans-serif;flex-shrink:0;background:var(--s2)}
+.hi-info{flex:1}
+.hi-title{font-size:13px;font-weight:500;margin-bottom:2px}
+.hi-meta{font-size:11px;color:var(--t2)}
+.empty-state{text-align:center;padding:52px 0;color:var(--t3);font-size:13px}
+
+/* ── SETTINGS ── */
+.set-wrap{max-width:500px}
+.set-sec{margin-bottom:30px}
+.set-sec h3{font-size:14px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:3px}
+.set-sec p{font-size:12px;color:var(--t2);margin-bottom:13px;line-height:1.6}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{width:58px;min-width:58px}
+  .brand-eyebrow,.brand-name,.brand-tag,.ni span,.nav-sec,.profile-mini,.sidebar-foot .status-lbl{display:none}
+  .ni{padding:11px;justify-content:center;margin:1px 4px 1px 0}
+  .ph,.pb{padding:16px}
+  .quiz-top{padding:10px 14px}
+  .quiz-body{padding:16px 14px}
+  .kpi-row,.r-kpis{grid-template-columns:repeat(2,1fr)}
+  .tutor-msgs,.tutor-input-wrap,.tutor-top,.tutor-hints{padding-left:14px;padding-right:14px}
+  .opt-grid{grid-template-columns:1fr}
+}
+
+/* INSTALL BANNER */
+.install-banner{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r);padding:14px 18px;max-width:280px;z-index:1000;box-shadow:var(--shadow);display:none}
+.install-banner.show{display:block}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-eyebrow">StaGove</div>
+    <div class="brand-name">PrepEdge</div>
+    <div class="brand-tag">SAT & AP Math · Adaptive Agent</div>
+  </div>
+
+  <div class="profile-mini empty" id="profile-mini" onclick="showPage('settings')">
+    <div id="profile-mini-inner">+ Set up profile</div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-sec">Study</div>
+    <div class="ni on" id="ni-dashboard" onclick="showPage('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="ni" id="ni-quiz" onclick="showPage('quiz')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
+      <span>Practice Quiz</span>
+    </div>
+    <div class="ni" id="ni-tutor" onclick="showPage('tutor')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>AI Tutor</span>
+    </div>
+    <div class="nav-sec">Track</div>
+    <div class="ni" id="ni-progress" onclick="showPage('progress')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Progress</span>
+    </div>
+    <div class="nav-sec">Account</div>
+    <div class="ni" id="ni-settings" onclick="showPage('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span>Profile & Settings</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-foot">
+    <div class="status-dot"></div>
+    <span class="status-lbl">Groq · llama-3.3-70b</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ONBOARDING -->
+  <div class="page on" id="page-onboarding">
+    <div class="ob-shell">
+      <div class="ob-card">
+        <div class="ob-progress">
+          <div class="ob-dot on" id="od-0"></div>
+          <div class="ob-dot" id="od-1"></div>
+          <div class="ob-dot" id="od-2"></div>
+          <div class="ob-dot" id="od-3"></div>
+        </div>
+
+        <div class="ob-step on" id="ob-0">
+          <div class="ob-title">Welcome to PrepEdge</div>
+          <div class="ob-sub">Your adaptive SAT & AP Math coach. Answer a few questions so the agent can personalize every quiz, explanation, and study plan for you.</div>
+          <div class="fg"><label class="fl">Your first name</label><input class="fi" id="ob-name" placeholder="e.g. Alex" maxlength="30"></div>
+          <div class="fg"><label class="fl">Current grade</label>
+            <select class="fs" id="ob-grade">
+              <option value="9">9th Grade (Freshman)</option>
+              <option value="10">10th Grade (Sophomore)</option>
+              <option value="11" selected>11th Grade (Junior)</option>
+              <option value="12">12th Grade (Senior)</option>
+              <option value="college">College Freshman</option>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-lg btn-full" onclick="obGo(1)">Continue →</button>
+        </div>
+
+        <div class="ob-step" id="ob-1">
+          <div class="ob-title">What are you preparing for?</div>
+          <div class="ob-sub">Select all that apply. The agent tailors questions to each exam's exact style and format.</div>
+          <div class="opt-grid">
+            <div class="oc" data-e="SAT" onclick="toggleOC(this)"><div class="oc-icon">📐</div><div class="oc-title">SAT Math</div><div class="oc-sub">800 pts · College Board</div></div>
+            <div class="oc" data-e="ACT" onclick="toggleOC(this)"><div class="oc-icon">📊</div><div class="oc-title">ACT Math</div><div class="oc-sub">60 questions · 60 min</div></div>
+            <div class="oc" data-e="AP_CALC_AB" onclick="toggleOC(this)"><div class="oc-icon">∫</div><div class="oc-title">AP Calculus AB</div><div class="oc-sub">Limits · Derivatives · Integrals</div></div>
+            <div class="oc" data-e="AP_CALC_BC" onclick="toggleOC(this)"><div class="oc-icon">∑</div><div class="oc-title">AP Calculus BC</div><div class="oc-sub">AB + Series · Parametric</div></div>
+            <div class="oc" data-e="AP_STATS" onclick="toggleOC(this)"><div class="oc-icon">📈</div><div class="oc-title">AP Statistics</div><div class="oc-sub">Data · Inference · Probability</div></div>
+            <div class="oc" data-e="AP_PRECALC" onclick="toggleOC(this)"><div class="oc-icon">🔢</div><div class="oc-title">AP Precalculus</div><div class="oc-sub">Functions · Trig · Polar</div></div>
+          </div>
+          <div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="obGo(0)">Back</button><button class="btn btn-primary" onclick="obGo(2)">Continue →</button></div>
+        </div>
+
+        <div class="ob-step" id="ob-2">
+          <div class="ob-title">Score goals & timeline</div>
+          <div class="ob-sub">The agent uses this to calculate how much ground you need to cover and prioritizes accordingly.</div>
+          <div class="fg"><label class="fl">Current estimated score</label>
+            <select class="fs" id="ob-current">
+              <option value="0">Haven't taken a practice test</option>
+              <option value="450">SAT ~450 / AP 1–2</option>
+              <option value="550">SAT ~550 / AP 2</option>
+              <option value="620">SAT ~620 / AP 2–3</option>
+              <option value="680">SAT ~680 / AP 3</option>
+              <option value="720">SAT ~720 / AP 3–4</option>
+              <option value="760">SAT ~760 / AP 4</option>
+              <option value="790">SAT ~790 / AP 4–5</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Target score</label>
+            <select class="fs" id="ob-target">
+              <option value="600">SAT 600 / AP 3</option>
+              <option value="650">SAT 650</option>
+              <option value="700">SAT 700 / AP 4</option>
+              <option value="750">SAT 750</option>
+              <option value="800" selected>SAT 800 / AP 5</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Exam date (approximate)</label><input class="fi" type="date" id="ob-date"></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="obGo(1)">Back</button><button class="btn btn-primary" onclick="obGo(3)">Continue →</button></div>
+        </div>
+
+        <div class="ob-step" id="ob-3">
+          <div class="ob-title">Any weak areas?</div>
+          <div class="ob-sub">The agent will prioritize these in your practice sessions and track your improvement over time.</div>
+          <div class="chips" id="ob-weak" style="margin-bottom:24px">
+            <div class="chip" data-t="Algebra" onclick="toggleChip(this)">Algebra</div>
+            <div class="chip" data-t="Functions" onclick="toggleChip(this)">Functions</div>
+            <div class="chip" data-t="Linear equations" onclick="toggleChip(this)">Linear equations</div>
+            <div class="chip" data-t="Quadratics" onclick="toggleChip(this)">Quadratics</div>
+            <div class="chip" data-t="Systems of equations" onclick="toggleChip(this)">Systems of equations</div>
+            <div class="chip" data-t="Geometry" onclick="toggleChip(this)">Geometry</div>
+            <div class="chip" data-t="Trigonometry" onclick="toggleChip(this)">Trigonometry</div>
+            <div class="chip" data-t="Statistics" onclick="toggleChip(this)">Statistics</div>
+            <div class="chip" data-t="Word problems" onclick="toggleChip(this)">Word problems</div>
+            <div class="chip" data-t="Limits" onclick="toggleChip(this)">Limits</div>
+            <div class="chip" data-t="Derivatives" onclick="toggleChip(this)">Derivatives</div>
+            <div class="chip" data-t="Integrals" onclick="toggleChip(this)">Integrals</div>
+            <div class="chip" data-t="Series" onclick="toggleChip(this)">Series</div>
+            <div class="chip" data-t="Probability" onclick="toggleChip(this)">Probability</div>
+          </div>
+          <div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="obGo(2)">Back</button><button class="btn btn-primary btn-lg" onclick="finishOnboarding()">Start studying →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page" id="page-dashboard">
+    <div class="pb">
+      <div class="dash-greeting" id="dash-greeting">Good morning</div>
+      <div class="dash-date" id="dash-date"></div>
+
+      <div class="countdown-banner" id="countdown-banner" style="display:none">
+        <div>
+          <div class="cd-days" id="cd-days">—</div>
+          <div class="cd-label">days left</div>
+        </div>
+        <div class="cd-text">
+          <div class="cd-title" id="cd-title">Until your exam</div>
+          <div class="cd-sub" id="cd-sub">Keep up the daily practice</div>
+        </div>
+        <div class="cd-urgency" id="cd-urgency"></div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val" id="kpi-streak" style="color:var(--yellow)">0🔥</div><div class="kpi-lbl">Day streak</div></div>
+        <div class="kpi"><div class="kpi-val" id="kpi-total">0</div><div class="kpi-lbl">Questions done</div></div>
+        <div class="kpi"><div class="kpi-val" id="kpi-acc" style="color:var(--green)">—</div><div class="kpi-lbl">Accuracy</div></div>
+        <div class="kpi"><div class="kpi-val" id="kpi-sessions">0</div><div class="kpi-lbl">Sessions</div></div>
+      </div>
+
+      <div class="trajectory" id="trajectory" style="display:none">
+        <div class="traj-header">
+          <div class="traj-title">SAT Score Trajectory</div>
+          <div class="traj-scores">
+            <div class="traj-score"><div class="traj-score-val" id="traj-current" style="color:var(--blue)">—</div><div class="traj-score-lbl">Current</div></div>
+            <div class="traj-score"><div class="traj-score-val" id="traj-target" style="color:var(--purple)">—</div><div class="traj-score-lbl">Target</div></div>
+          </div>
+        </div>
+        <div class="traj-bar-wrap">
+          <div class="traj-bar-fill" id="traj-fill" style="width:0%"></div>
+          <div class="traj-bar-target" id="traj-target-marker"></div>
+        </div>
+        <div class="traj-legend">
+          <span><div class="traj-dot" style="background:var(--blue)"></div>Current estimate</span>
+          <span><div class="traj-dot" style="background:var(--purple)"></div>Your target</span>
+        </div>
+        <div style="font-size:11px;color:var(--t3);margin-top:6px" id="traj-note"></div>
+      </div>
+
+      <div id="sr-alert-wrap"></div>
+
+      <div class="goal-card">
+        <div class="goal-ring">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="var(--s4)" stroke-width="3.5"/>
+            <circle cx="26" cy="26" r="21" fill="none" id="goal-arc" stroke="var(--blue)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="131.95" stroke-dashoffset="131.95" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset .6s"/>
+          </svg>
+          <div class="goal-pct" id="goal-pct">0%</div>
+        </div>
+        <div class="goal-info">
+          <div class="goal-title" id="goal-title">Daily goal: 0 / 10 questions</div>
+          <div class="goal-sub" id="goal-sub">Complete your daily practice to build momentum</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showPage('quiz')">Practice now</button>
+      </div>
+
+      <div id="weak-row" style="display:none;margin-bottom:20px">
+        <div class="section-lbl">Focus areas</div>
+        <div class="chips" id="weak-chips-dash"></div>
+      </div>
+
+      <div class="section-lbl">Your exams</div>
+      <div class="topic-grid" id="topic-grid"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="showPage('quiz')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Practice
+        </button>
+        <button class="btn btn-subtle" onclick="showPage('tutor')">Ask AI Tutor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ CONFIG -->
+  <div class="page" id="page-quiz">
+    <div class="ph"><div class="ph-title">Practice Quiz</div><div class="ph-sub">The agent plans your quiz based on your profile and goals</div></div>
+    <div class="pb">
+      <div class="qc-wrap">
+        <div class="step-dots">
+          <div class="sd on" id="sd-0"></div><div class="sd" id="sd-1"></div><div class="sd" id="sd-2"></div><div class="sd" id="sd-3"></div>
+        </div>
+
+        <!-- Step 0: Mode -->
+        <div class="qs on" id="qs-0">
+          <div class="qs-title">What do you want to practice?</div>
+          <div class="qs-sub">Choose the focus for this session</div>
+          <div class="opt-grid">
+            <div class="oc" id="qm-weak" onclick="pickMode('weak')"><div class="oc-icon">🎯</div><div class="oc-title">Weak areas</div><div class="oc-sub">Agent targets your flagged topics</div></div>
+            <div class="oc" id="qm-topic" onclick="pickMode('topic')"><div class="oc-icon">📚</div><div class="oc-title">Specific topic</div><div class="oc-sub">You choose what to drill</div></div>
+            <div class="oc" id="qm-exam" onclick="pickMode('exam')"><div class="oc-icon">📝</div><div class="oc-title">Full exam simulation</div><div class="oc-sub">Mixed questions, real conditions</div></div>
+            <div class="oc" id="qm-review" onclick="pickMode('review')"><div class="oc-icon">🔁</div><div class="oc-title">Review missed</div><div class="oc-sub">Retry questions you got wrong</div></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Topic -->
+        <div class="qs" id="qs-1">
+          <div class="qs-title">Choose topic</div>
+          <div class="qs-sub">Select the exam and specific topic to practice</div>
+          <div class="fg"><label class="fl">Exam</label><select class="fs" id="exam-sel" onchange="updateTopics()"></select></div>
+          <div class="fg"><label class="fl">Topic</label><select class="fs" id="topic-sel"></select></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn btn-ghost" onclick="goQS(0)">Back</button>
+            <button class="btn btn-primary" onclick="goQS(2)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Options -->
+        <div class="qs" id="qs-2">
+          <div class="qs-title">Quiz options</div>
+          <div class="qs-sub">Configure this session</div>
+          <div class="fg"><label class="fl">Questions</label>
+            <div class="chips" id="qn-chips">
+              <div class="chip on" onclick="pickQN(this,5)">5</div>
+              <div class="chip" onclick="pickQN(this,10)">10</div>
+              <div class="chip" onclick="pickQN(this,15)">15</div>
+              <div class="chip" onclick="pickQN(this,20)">20</div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Difficulty</label>
+            <div class="diff-row">
+              <button class="dp" data-d="easy" onclick="pickDiff(this)">Easy</button>
+              <button class="dp on" data-d="medium" onclick="pickDiff(this)">Medium</button>
+              <button class="dp" data-d="hard" onclick="pickDiff(this)">Hard</button>
+              <button class="dp" data-d="adaptive" onclick="pickDiff(this)">⚡ Adaptive</button>
+            </div>
+            <div style="font-size:11px;color:var(--t2);margin-top:7px" id="diff-hint">Adaptive: agent adjusts difficulty every 3 questions based on your accuracy.</div>
+          </div>
+          <div class="fg"><label class="fl">Timer</label>
+            <div class="timer-opts">
+              <div class="to on" id="to-timed" onclick="pickTimer(true)"><div class="to-icon">⏱</div><div class="to-label">Timed</div><div class="to-sub">Agent sets time per question</div></div>
+              <div class="to" id="to-free" onclick="pickTimer(false)"><div class="to-icon">∞</div><div class="to-label">Untimed</div><div class="to-sub">No pressure</div></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" id="qs2-back" onclick="goQS(S.qMode==='topic'?1:0)">Back</button>
+            <button class="btn btn-primary" onclick="goQS(3)">Let agent plan →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Agent planning -->
+        <div class="qs" id="qs-3">
+          <div class="qs-title">Agent is preparing your quiz</div>
+          <div class="qs-sub" id="plan-sub">Analyzing your profile…</div>
+          <div class="agent-card">
+            <div class="ac-head">
+              <div class="ac-avatar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div><div class="ac-name">PrepEdge Agent</div><div class="ac-status" id="ac-status">Working…</div></div>
+            </div>
+            <div class="plan-list">
+              <div class="pl" id="pl-0"><div class="pl-spin" id="pl0-s"></div><svg class="pl-check" id="pl0-c" style="display:none" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/><polyline points="4 7 6 9 10 5"/></svg><svg class="pl-wait" id="pl0-w" style="display:none" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/></svg><span id="pl0-t">Analyzing topic difficulty for your level…</span></div>
+              <div class="pl" id="pl-1"><div class="pl-spin" id="pl1-s" style="display:none"></div><svg class="pl-check" id="pl1-c" style="display:none" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/><polyline points="4 7 6 9 10 5"/></svg><svg class="pl-wait" id="pl1-w" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/></svg><span id="pl1-t">Setting optimal time per question</span></div>
+              <div class="pl" id="pl-2"><div class="pl-spin" id="pl2-s" style="display:none"></div><svg class="pl-check" id="pl2-c" style="display:none" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/><polyline points="4 7 6 9 10 5"/></svg><svg class="pl-wait" id="pl2-w" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/></svg><span id="pl2-t">Generating exam-style questions</span></div>
+              <div class="pl" id="pl-3"><div class="pl-spin" id="pl3-s" style="display:none"></div><svg class="pl-check" id="pl3-c" style="display:none" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/><polyline points="4 7 6 9 10 5"/></svg><svg class="pl-wait" id="pl3-w" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="6"/></svg><span id="pl3-t">Building step-by-step explanations</span></div>
+            </div>
+            <div class="time-rec" id="time-rec" style="display:none"></div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-full" id="launch-btn" style="display:none" onclick="launchQuiz()">Start Quiz →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVE QUIZ -->
+  <div class="page" id="page-active-quiz">
+    <div class="quiz-shell">
+      <div class="quiz-top">
+        <div class="qt-info">
+          <div class="qt-topic" id="qt-topic">Quiz</div>
+          <div class="qt-num" id="qt-num">Question 1 of 10</div>
+        </div>
+        <div class="qt-prog">
+          <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:10%"></div></div>
+          <div class="prog-nums"><span id="prog-n">1/10</span><span id="score-live">Score: 0</span></div>
+        </div>
+        <div class="timer-ring" id="timer-ring">
+          <svg viewBox="0 0 50 50" width="50" height="50">
+            <circle class="tr-bg" cx="25" cy="25" r="21"/>
+            <circle class="tr-arc" id="tr-arc" cx="25" cy="25" r="21" stroke-dasharray="131.95" stroke-dashoffset="0"/>
+          </svg>
+          <div class="tr-num" id="tr-num">--</div>
+        </div>
+      </div>
+      <div class="quiz-body">
+        <div class="q-wrap">
+          <div class="q-tags" id="q-tags"></div>
+          <div class="q-text" id="q-text">Loading…</div>
+          <div class="opts" id="q-opts"></div>
+          <div class="explain" id="explain"></div>
+          <div class="adapt-notice" id="adapt-notice">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span id="adapt-text">Agent adjusted timing</span>
+          </div>
+          <div class="q-nav"><button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextQ()">Next →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="page" id="page-results">
+    <div class="pb">
+      <div class="results-wrap">
+        <div class="r-hero">
+          <div class="r-ring">
+            <svg viewBox="0 0 108 108" width="108" height="108">
+              <circle cx="54" cy="54" r="46" fill="none" stroke="var(--s4)" stroke-width="6.5"/>
+              <circle cx="54" cy="54" r="46" fill="none" id="r-arc" stroke="var(--green)" stroke-width="6.5" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03"/>
+            </svg>
+            <div class="r-ring-inner"><div class="r-pct" id="r-pct">0%</div><div class="r-lbl">Score</div></div>
+          </div>
+          <div class="r-headline" id="r-headline">Quiz complete</div>
+          <div class="r-tagline" id="r-tagline"></div>
+        </div>
+        <div class="r-kpis">
+          <div class="rk"><div class="rk-val" id="rk-correct" style="color:var(--green)">—</div><div class="rk-lbl">Correct</div></div>
+          <div class="rk"><div class="rk-val" id="rk-time">—</div><div class="rk-lbl">Avg time</div></div>
+          <div class="rk"><div class="rk-val" id="rk-timeout" style="color:var(--yellow)">—</div><div class="rk-lbl">Timed out</div></div>
+          <div class="rk"><div class="rk-val" id="rk-streak" style="color:var(--yellow)">—</div><div class="rk-lbl">Streak</div></div>
+        </div>
+        <div class="score-proj" id="score-proj" style="display:none">
+          <div class="sp-title">SAT Math Score Projection</div>
+          <div id="sp-bars"></div>
+          <div style="font-size:11px;color:var(--t2);margin-top:8px">Based on cumulative accuracy across all sessions</div>
+        </div>
+        <div class="sr-notice" id="sr-notice" style="display:none"></div>
+        <div class="fb-card" id="fb-card" style="display:none">
+          <div class="fb-head">
+            <div class="ac-avatar" style="width:30px;height:30px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div><div class="fb-title">Agent Analysis</div><div class="fb-sub">Personalized performance feedback</div></div>
+          </div>
+          <div class="fb-body" id="fb-body"></div>
+        </div>
+        <div class="section-lbl" style="margin-bottom:10px">Question Review</div>
+        <div id="review-list"></div>
+        <div style="display:flex;gap:8px;margin-top:22px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="showPage('quiz')">Practice again</button>
+          <button class="btn btn-subtle" onclick="reviewWithTutor()">Discuss mistakes with tutor</button>
+          <button class="btn btn-ghost" onclick="showPage('dashboard')">Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI TUTOR -->
+  <div class="page" id="page-tutor">
+    <div class="tutor-shell">
+      <div class="tutor-top">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:14px;font-weight:500;font-family:'Space Grotesk',sans-serif">AI Tutor</div>
+          <select class="fs" id="tutor-ctx" style="width:180px;padding:6px 11px;font-size:12px">
+            <option value="">General Math</option>
+            <option value="SAT Math">SAT Math</option>
+            <option value="AP Calculus AB">AP Calculus AB</option>
+            <option value="AP Calculus BC">AP Calculus BC</option>
+            <option value="AP Statistics">AP Statistics</option>
+            <option value="AP Precalculus">AP Precalculus</option>
+            <option value="ACT Math">ACT Math</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="clearTutor()">Clear</button>
+      </div>
+      <div class="tutor-hints">
+        <div class="hint" onclick="useHint(this)">Explain step by step</div>
+        <div class="hint" onclick="useHint(this)">Give me a practice problem</div>
+        <div class="hint" onclick="useHint(this)">What's tested on SAT Math?</div>
+        <div class="hint" onclick="useHint(this)">Help me with word problems</div>
+        <div class="hint" onclick="useHint(this)">Tips for running out of time</div>
+      </div>
+      <div class="tutor-msgs" id="tutor-msgs">
+        <div class="msg-a-wrap">
+          <div class="msg-a-meta"><div class="ai-av">P</div><div class="ai-name">PrepEdge</div></div>
+          <div class="msg-a-body">Hi! I'm your SAT & AP Math tutor. I know your profile and weak areas, so every explanation is tailored to your level and target exam.<br><br>Ask me to explain a concept, work through a problem step by step, or give you a practice question. What are you working on?</div>
+        </div>
+      </div>
+      <div class="tutor-input-wrap">
+        <textarea class="tutor-ta" id="tutor-ta" placeholder="Ask anything…" rows="1" onkeydown="tutorKey(event)" oninput="grow(this)"></textarea>
+        <button class="btn btn-primary" onclick="sendTutor()" style="height:44px;padding:0 16px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="page" id="page-progress">
+    <div class="ph"><div class="ph-title">Progress</div><div class="ph-sub">Your performance history and score trajectory</div></div>
+    <div class="pb" id="prog-body"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="ph"><div class="ph-title">Profile & Settings</div><div class="ph-sub">Personalize your study agent</div></div>
+    <div class="pb">
+      <div class="set-wrap">
+        <div class="set-sec">
+          <h3>Study profile</h3>
+          <p>The agent uses this to personalize every quiz, explanation, and study plan.</p>
+          <div class="fg"><label class="fl">Name</label><input class="fi" id="set-name" placeholder="Your first name"></div>
+          <div class="fg"><label class="fl">Grade</label>
+            <select class="fs" id="set-grade">
+              <option value="9">9th Grade</option><option value="10">10th Grade</option>
+              <option value="11">11th Grade</option><option value="12">12th Grade</option>
+              <option value="college">College Freshman</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Target exams</label><div class="chips" id="set-exams"></div></div>
+          <div class="fg"><label class="fl">Target score</label>
+            <select class="fs" id="set-target">
+              <option value="600">SAT 600</option><option value="650">SAT 650</option>
+              <option value="700">SAT 700</option><option value="750">SAT 750</option>
+              <option value="800">SAT 800 / AP 5</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Exam date</label><input class="fi" type="date" id="set-date"></div>
+          <div class="fg"><label class="fl">Weak areas</label><div class="chips" id="set-weak"></div></div>
+          <button class="btn btn-primary btn-sm" onclick="saveProfile()">Save profile</button>
+        </div>
+        <div class="set-sec">
+          <h3>Reset</h3>
+          <p>Clear all progress and profile data.</p>
+          <button class="btn btn-ghost btn-sm" onclick="resetAll()">Reset everything</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <div style="font-size:13px;font-weight:500;font-family:'Space Grotesk',sans-serif;margin-bottom:5px">Install PrepEdge</div>
+  <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Add to your home screen for the best experience</div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-primary btn-sm" id="install-btn">Install</button>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('install-banner').classList.remove('show')">Later</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════
+// CONSTANTS
+// ══════════════════════════════
+const EXAM_LABELS = {SAT:'SAT Math',ACT:'ACT Math',AP_CALC_AB:'AP Calculus AB',AP_CALC_BC:'AP Calculus BC',AP_STATS:'AP Statistics',AP_PRECALC:'AP Precalculus'};
+const EXAM_ICONS = {SAT:'📐',ACT:'📊',AP_CALC_AB:'∫',AP_CALC_BC:'∑',AP_STATS:'📈',AP_PRECALC:'🔢'};
+const EXAM_COLORS = {SAT:'#5B8DEF',ACT:'#A78BFA',AP_CALC_AB:'#34D399',AP_CALC_BC:'#FBBF24',AP_STATS:'#F87171',AP_PRECALC:'#67E8F9'};
+const TOPICS = {
+  SAT:['Heart of Algebra','Linear equations & systems','Quadratic equations','Passport to Advanced Math','Functions & polynomials','Radicals & rational exponents','Problem Solving & Data Analysis','Ratios & proportional reasoning','Statistics & probability','Word problems','Geometry','Coordinate geometry','Circles & area'],
+  ACT:['Pre-Algebra','Elementary Algebra','Intermediate Algebra','Coordinate Geometry','Plane Geometry','Trigonometry','Probability & Statistics'],
+  AP_CALC_AB:['Limits & continuity','Derivatives — definition & rules','Implicit differentiation','Related rates','Curve sketching & optimization','Riemann sums','Definite integrals','Fundamental Theorem of Calculus','Integration techniques','Differential equations','Area between curves'],
+  AP_CALC_BC:['All AB topics','Parametric equations','Polar curves','Vector functions','Sequences & series','Taylor & Maclaurin series','Convergence tests','Arc length'],
+  AP_STATS:['Exploring data','Sampling & experimental design','Probability','Random variables','Sampling distributions','Confidence intervals','Significance tests','Inference for proportions','Inference for means','Chi-square tests','Regression inference'],
+  AP_PRECALC:['Polynomial functions','Rational functions','Exponential & logarithmic functions','Trigonometric functions','Trigonometric identities','Polar coordinates','Parametric equations','Conic sections','Sequences & series']
+};
+const WEAK_ALL = ['Algebra','Functions','Linear equations','Quadratics','Systems of equations','Geometry','Trigonometry','Statistics','Word problems','Limits','Derivatives','Integrals','Series','Probability'];
+
+// ══════════════════════════════
+// STATE
+// ══════════════════════════════
+const S = {
+  profile: JSON.parse(localStorage.getItem('pe_profile') || 'null'),
+  progress: JSON.parse(localStorage.getItem('pe_progress') || '{"sessions":[],"topicStats":{},"totalQ":0,"totalCorrect":0,"streak":0,"lastDate":null,"missedQ":[]}'),
+  qMode:'topic', exam:'SAT', topic:'', difficulty:'medium', timed:true, qCount:5,
+  questions:[], qi:0, score:0, answers:[], timePerQ:60, qTimes:[], timeouts:0,
+  timerInt:null, timeLeft:0, qStart:0, tutorHistory:[], deferredInstall:null
+};
+
+// ══════════════════════════════
+// NAVIGATION
+// ══════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'));
+  document.getElementById('page-' + id).classList.add('on');
+  const ni = document.getElementById('ni-' + id);
+  if(ni) ni.classList.add('on');
+  if(id === 'dashboard') renderDash();
+  if(id === 'progress') renderProgress();
+  if(id === 'settings') loadSettings();
+  if(id === 'quiz') resetQuizConfig();
+}
+
+// ══════════════════════════════
+// ONBOARDING
+// ══════════════════════════════
+function obGo(n) {
+  document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('on'));
+  document.getElementById('ob-' + n).classList.add('on');
+  for(let i=0;i<4;i++) document.getElementById('od-'+i).classList.toggle('on', i<=n);
+}
+function toggleOC(el) { el.classList.toggle('on'); }
+function toggleChip(el) { el.classList.toggle('on'); }
+function finishOnboarding() {
+  const name = document.getElementById('ob-name').value.trim() || 'Student';
+  const exams = [...document.querySelectorAll('#ob-1 .oc.on')].map(e => e.dataset.e);
+  if(!exams.length) { alert('Pick at least one exam.'); return; }
+  S.profile = {
+    name, grade: document.getElementById('ob-grade').value,
+    exams, examDate: document.getElementById('ob-date').value,
+    currentScore: parseInt(document.getElementById('ob-current').value) || 0,
+    targetScore: parseInt(document.getElementById('ob-target').value) || 800,
+    weakAreas: [...document.querySelectorAll('#ob-weak .chip.on')].map(c => c.dataset.t)
+  };
+  localStorage.setItem('pe_profile', JSON.stringify(S.profile));
+  showPage('dashboard');
+}
+
+// ══════════════════════════════
+// DASHBOARD
+// ══════════════════════════════
+function renderDash() {
+  if(!S.profile) { showPage('onboarding'); return; }
+  const p = S.profile, pr = S.progress;
+  const h = new Date().getHours();
+  document.getElementById('dash-greeting').textContent = (h<12?'Good morning':h<17?'Good afternoon':'Good evening') + ', ' + p.name;
+  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  // Profile mini
+  const pm = document.getElementById('profile-mini');
+  pm.className = 'profile-mini';
+  document.getElementById('profile-mini-inner').innerHTML = `
+    <div class="pm-name">${p.name}</div>
+    <div class="pm-meta">Grade ${p.grade} · Target: ${p.targetScore} SAT</div>
+    <div class="pm-tags">
+      ${p.exams.map(e=>`<span class="pm-tag b">${EXAM_LABELS[e]}</span>`).join('')}
+      ${p.weakAreas?.length?`<span class="pm-tag p">${p.weakAreas.length} weak</span>`:''}
+    </div>`;
+
+  // Countdown
+  if(p.examDate) {
+    const days = Math.ceil((new Date(p.examDate) - new Date()) / 86400000);
+    if(days > 0) {
+      document.getElementById('countdown-banner').style.display = 'flex';
+      document.getElementById('cd-days').textContent = days;
+      document.getElementById('cd-title').textContent = 'Until ' + (p.exams.map(e=>EXAM_LABELS[e]).join(' / '));
+      const urg = document.getElementById('cd-urgency');
+      if(days <= 14) { urg.textContent = '🔥 Final stretch'; urg.className = 'cd-urgency high'; document.getElementById('cd-sub').textContent = 'Increase intensity — focus on weak areas'; }
+      else if(days <= 45) { urg.textContent = '⚡ Building phase'; urg.className = 'cd-urgency med'; document.getElementById('cd-sub').textContent = 'Steady daily practice will make the difference'; }
+      else { urg.textContent = '✓ Plenty of time'; urg.className = 'cd-urgency low'; document.getElementById('cd-sub').textContent = 'Build strong foundations now'; }
+    }
+  }
+
+  // KPIs
+  document.getElementById('kpi-streak').textContent = (pr.streak||0) + '🔥';
+  document.getElementById('kpi-total').textContent = pr.totalQ||0;
+  document.getElementById('kpi-sessions').textContent = pr.sessions?.length||0;
+  const acc = pr.totalQ ? Math.round((pr.totalCorrect/pr.totalQ)*100) : null;
+  document.getElementById('kpi-acc').textContent = acc ? acc+'%' : '—';
+
+  // Trajectory
+  const satEst = estimateSAT(acc, pr.totalQ);
+  if(satEst) {
+    document.getElementById('trajectory').style.display = 'block';
+    document.getElementById('traj-current').textContent = satEst;
+    document.getElementById('traj-target').textContent = p.targetScore;
+    const fillPct = ((satEst-200)/600)*100;
+    const targetPct = ((p.targetScore-200)/600)*100;
+    setTimeout(() => { document.getElementById('traj-fill').style.width = fillPct+'%'; }, 100);
+    document.getElementById('traj-target-marker').style.left = targetPct+'%';
+    const gap = p.targetScore - satEst;
+    document.getElementById('traj-note').textContent = gap > 0 ? `${gap} points to go. Keep practicing consistently.` : '🎯 You\'ve reached your target score!';
+  }
+
+  // Spaced repetition
+  checkSpacedRep();
+
+  // Daily goal
+  const today = new Date().toDateString();
+  const todayQ = (pr.sessions||[]).filter(s=>new Date(s.date).toDateString()===today).reduce((a,b)=>a+(b.count||0),0);
+  const goalQ = 10, pct = Math.min(todayQ/goalQ,1);
+  document.getElementById('goal-arc').style.strokeDashoffset = 131.95*(1-pct);
+  document.getElementById('goal-arc').style.stroke = pct>=1?'var(--green)':'var(--blue)';
+  document.getElementById('goal-pct').textContent = Math.round(pct*100)+'%';
+  document.getElementById('goal-title').textContent = pct>=1 ? '✓ Daily goal complete!' : `Daily goal: ${todayQ} / ${goalQ} questions`;
+  document.getElementById('goal-sub').textContent = pct>=1 ? 'Excellent — come back tomorrow to keep your streak.' : 'Consistent daily practice is the fastest path to a higher score.';
+
+  // Weak areas
+  if(p.weakAreas?.length) {
+    document.getElementById('weak-row').style.display = 'block';
+    document.getElementById('weak-chips-dash').innerHTML = p.weakAreas.map(w=>`<div class="chip on" style="cursor:default">${w}</div>`).join('');
+  }
+
+  // Topic grid
+  document.getElementById('topic-grid').innerHTML = p.exams.map(exam => {
+    const ts = pr.topicStats?.[exam] || {};
+    const scores = Object.values(ts);
+    const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+    return `<div class="tc" style="--tc:${EXAM_COLORS[exam]}" onclick="startExamDrill('${exam}')">
+      <div class="tc-icon">${EXAM_ICONS[exam]}</div>
+      <div class="tc-name">${EXAM_LABELS[exam]}</div>
+      <div class="tc-meta">${TOPICS[exam]?.length||0} topics</div>
+      <div class="tc-bar"><div class="tc-fill" style="width:${avg||0}%;background:${EXAM_COLORS[exam]}"></div></div>
+      <div class="tc-score">${avg ? avg+'% avg accuracy' : 'Not started yet'}</div>
+    </div>`;
+  }).join('');
+}
+
+function estimateSAT(acc, total) {
+  if(!acc || total < 5) return null;
+  return Math.min(800, Math.max(200, 200 + Math.round((acc/100)*600)));
+}
+
+function checkSpacedRep() {
+  const pr = S.progress;
+  if(!pr.missedQ?.length) return;
+  const due = pr.missedQ.filter(q => {
+    if(!q.nextReview) return false;
+    return new Date(q.nextReview) <= new Date();
+  });
+  const wrap = document.getElementById('sr-alert-wrap');
+  if(due.length > 0) {
+    wrap.innerHTML = `<div class="sr-alert" onclick="startSRReview()">
+      <span style="font-size:16px">🔁</span>
+      <div><strong style="color:var(--text)">${due.length} question${due.length>1?'s':''} due for review</strong> — spaced repetition keeps knowledge fresh. Practice now.</div>
+      <button class="btn btn-subtle btn-sm" style="flex-shrink:0">Review</button>
+    </div>`;
+  } else { wrap.innerHTML = ''; }
+}
+
+function startExamDrill(exam) {
+  S.qMode = 'topic'; S.exam = exam;
+  showPage('quiz');
+  goQS(1);
+  document.getElementById('exam-sel').value = exam;
+  updateTopics();
+}
+
+function startSRReview() {
+  S.qMode = 'review';
+  showPage('quiz');
+  goQS(2);
+}
+
+// ══════════════════════════════
+// QUIZ CONFIG
+// ══════════════════════════════
+function resetQuizConfig() {
+  goQS(0);
+  S.difficulty = 'medium'; S.timed = true; S.qCount = 5;
+  document.querySelectorAll('.dp').forEach(d => d.classList.remove('on'));
+  document.querySelector('.dp[data-d=medium]').classList.add('on');
+  document.getElementById('to-timed').classList.add('on');
+  document.getElementById('to-free').classList.remove('on');
+  document.querySelectorAll('#qn-chips .chip').forEach(c => c.classList.remove('on'));
+  document.querySelector('#qn-chips .chip').classList.add('on');
+  document.querySelectorAll('.oc[id^=qm-]').forEach(c => c.classList.remove('on'));
+}
+
+function goQS(n) {
+  document.querySelectorAll('.qs').forEach(s => s.classList.remove('on'));
+  document.getElementById('qs-' + n).classList.add('on');
+  for(let i=0;i<4;i++) document.getElementById('sd-'+i).classList.toggle('on', i<=n);
+  if(n===1) populateExamSel();
+  if(n===3) runAgentPlan();
+}
+
+function pickMode(mode) {
+  S.qMode = mode;
+  document.querySelectorAll('.oc[id^=qm-]').forEach(c => c.classList.remove('on'));
+  document.getElementById('qm-'+mode).classList.add('on');
+  setTimeout(() => goQS(mode==='topic'?1:2), 180);
+}
+
+function populateExamSel() {
+  const sel = document.getElementById('exam-sel');
+  sel.innerHTML = '';
+  (S.profile?.exams || Object.keys(EXAM_LABELS)).forEach(e => {
+    const o = document.createElement('option');
+    o.value = e; o.textContent = EXAM_LABELS[e];
+    sel.appendChild(o);
+  });
+  if(S.exam) sel.value = S.exam;
+  updateTopics();
+}
+
+function updateTopics() {
+  S.exam = document.getElementById('exam-sel').value;
+  const sel = document.getElementById('topic-sel');
+  sel.innerHTML = '';
+  (TOPICS[S.exam]||[]).forEach(t => {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    sel.appendChild(o);
+  });
+}
+
+function pickQN(el, n) {
+  document.querySelectorAll('#qn-chips .chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on'); S.qCount = n;
+}
+
+function pickDiff(el) {
+  document.querySelectorAll('.dp').forEach(d => d.classList.remove('on'));
+  el.classList.add('on'); S.difficulty = el.dataset.d;
+  const hints = {easy:'Foundational concepts — great for building confidence.',medium:'Standard exam difficulty.',hard:'Multi-step problems requiring deep understanding.',adaptive:'Agent adjusts after every 3 questions based on your accuracy.'};
+  document.getElementById('diff-hint').textContent = hints[S.difficulty];
+}
+
+function pickTimer(on) {
+  S.timed = on;
+  document.getElementById('to-timed').classList.toggle('on', on);
+  document.getElementById('to-free').classList.toggle('on', !on);
+}
+
+// ══════════════════════════════
+// AGENT PLANNING
+// ══════════════════════════════
+async function runAgentPlan() {
+  S.topic = document.getElementById('topic-sel')?.value || '';
+  S.exam = document.getElementById('exam-sel')?.value || S.profile?.exams?.[0] || 'SAT';
+  resetPlan();
+  const label = S.qMode==='weak' ? 'weak areas: '+(S.profile?.weakAreas?.join(', ')||'mixed')
+    : S.qMode==='exam' ? EXAM_LABELS[S.exam]+' full simulation'
+    : S.qMode==='review' ? 'missed questions review'
+    : EXAM_LABELS[S.exam]+' — '+S.topic;
+
+  document.getElementById('plan-sub').textContent = 'Preparing: '+label;
+
+  // Step 0: analyze
+  setPL(0,'spin');
+  let timePerQ = 60;
+  if(S.timed) {
+    try {
+      const r = await api([{role:'user',content:`You are PrepEdge AI. Grade ${S.profile?.grade||11} student preparing for ${EXAM_LABELS[S.exam]}. Topic: "${label}". Difficulty: ${S.difficulty}.
+Return ONLY JSON: {"seconds":<20-150>,"reasoning":"<one sentence>","label":"<Foundational/Standard/Challenging/Expert>"}`}], 120);
+      const j = JSON.parse(r.replace(/```json|```/g,'').trim());
+      timePerQ = j.seconds||60;
+      setPL(0,'done', `${j.label} — ${j.reasoning}`);
+    } catch(e) {
+      timePerQ = {easy:35,medium:60,hard:95,adaptive:65}[S.difficulty]||60;
+      setPL(0,'done','Topic analyzed: '+S.difficulty+' level');
+    }
+  } else { setPL(0,'done','Untimed session'); }
+  S.timePerQ = timePerQ;
+
+  // Step 1: time
+  setPL(1,'spin'); await sleep(250);
+  if(S.timed) {
+    document.getElementById('time-rec').style.display='block';
+    document.getElementById('time-rec').innerHTML = `Agent recommendation: <strong>${timePerQ}s per question</strong><br>Total: ~${Math.ceil(S.qCount*timePerQ/60)} min · ${S.qCount} questions${S.difficulty==='adaptive'?'<br><span style="color:var(--purple)">⚡ Adaptive: difficulty adjusts every 3 questions</span>':''}`;
+  }
+  setPL(1,'done',S.timed?`${timePerQ}s/question · ~${Math.ceil(S.qCount*timePerQ/60)} min total`:'Untimed');
+
+  // Step 2: generate
+  setPL(2,'spin');
+  document.getElementById('ac-status').textContent = 'Generating questions…';
+  let qs = [];
+  try { qs = await generateQ(label); } catch(e) { qs = []; }
+  if(!qs.length) { setPL(2,'done','Using fallback questions'); }
+  else setPL(2,'done', `${qs.length} ${EXAM_LABELS[S.exam]}-style questions`);
+  S.questions = qs;
+
+  // Step 3: explanations
+  setPL(3,'spin'); await sleep(300);
+  setPL(3,'done','Step-by-step solutions embedded');
+  document.getElementById('ac-status').textContent = 'Ready!';
+  document.getElementById('plan-sub').textContent = label+' — ready to start';
+  document.getElementById('launch-btn').style.display='flex';
+}
+
+function resetPlan() {
+  for(let i=0;i<4;i++) setPL(i,'wait');
+  document.getElementById('launch-btn').style.display='none';
+  document.getElementById('time-rec').style.display='none';
+  document.getElementById('ac-status').textContent='Working…';
+}
+
+function setPL(i, state, text) {
+  const pl = document.getElementById('pl-'+i);
+  pl.classList.toggle('done', state==='done');
+  pl.classList.toggle('active', state==='spin');
+  ['s','c','w'].forEach(t => document.getElementById('pl'+i+'-'+t).style.display='none');
+  if(state==='spin') document.getElementById('pl'+i+'-s').style.display='block';
+  else if(state==='done') document.getElementById('pl'+i+'-c').style.display='block';
+  else document.getElementById('pl'+i+'-w').style.display='block';
+  if(text) document.getElementById('pl'+i+'-t').textContent=text;
+}
+
+async function generateQ(label) {
+  const p = S.profile;
+  const prompt = `You are PrepEdge, an autonomous SAT & AP Math coaching agent.
+Student: Grade ${p?.grade||11}, preparing for ${EXAM_LABELS[S.exam]}, target ${p?.targetScore||800} SAT.
+Weak areas: ${p?.weakAreas?.join(', ')||'none specified'}.
+Generate exactly ${S.qCount} multiple-choice questions about "${label}" at ${S.difficulty==='adaptive'?'medium':S.difficulty} difficulty.
+Match the EXACT style, format, and vocabulary of real ${EXAM_LABELS[S.exam]} questions.
+
+Return ONLY a valid JSON array, no markdown, no preamble:
+[{"question":"...","options":["A) ...","B) ...","C) ...","D) ..."],"correct":0,"explanation":"Full step-by-step solution showing every step of the work","sat_tip":"One specific exam strategy tip for this question type","topic":"${label}","difficulty":"${S.difficulty}"}]
+
+Rules: correct=0-based index. Explanation must show complete worked solution. sat_tip = actionable test-taking strategy.`;
+
+  const raw = await api([{role:'user',content:prompt}], 2800);
+  const clean = raw.replace(/```json|```/g,'').trim();
+  const arr = JSON.parse(clean.substring(clean.indexOf('['), clean.lastIndexOf(']')+1));
+  return Array.isArray(arr) ? arr.slice(0,S.qCount) : [];
+}
+
+// ══════════════════════════════
+// ACTIVE QUIZ
+// ══════════════════════════════
+function launchQuiz() {
+  S.qi=0; S.score=0; S.answers=[]; S.qTimes=[]; S.timeouts=0;
+  document.getElementById('qt-topic').textContent = S.qMode==='topic' ? `${EXAM_LABELS[S.exam]} · ${S.topic}` : EXAM_LABELS[S.exam]+' Quiz';
+  showPage('active-quiz');
+  renderQ();
+}
+
+function renderQ() {
+  clearInterval(S.timerInt);
+  const q = S.questions[S.qi];
+  if(!q) { finishQuiz(); return; }
+  const total = S.questions.length, n = S.qi+1;
+
+  document.getElementById('qt-num').textContent = `Question ${n} of ${total}`;
+  document.getElementById('prog-fill').style.width = (n/total*100)+'%';
+  document.getElementById('prog-n').textContent = n+'/'+total;
+  document.getElementById('score-live').textContent = 'Score: '+S.score;
+  document.getElementById('next-btn').style.display='none';
+  document.getElementById('explain').classList.remove('on');
+  document.getElementById('adapt-notice').classList.remove('on');
+
+  // Tags
+  document.getElementById('q-tags').innerHTML =
+    `<span class="q-tag b">${EXAM_LABELS[S.exam]||'Math'}</span>` +
+    (q.topic?`<span class="q-tag">${q.topic}</span>`:'') +
+    (q.difficulty?`<span class="q-tag p">${q.difficulty}</span>`:'');
+
+  document.getElementById('q-text').textContent = q.question;
+
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  q.options.forEach((opt,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-key">${['A','B','C','D'][i]}</span><span class="opt-body">${opt.replace(/^[A-D]\)\s*/,'')}</span>`;
+    btn.onclick = () => answerQ(i);
+    opts.appendChild(btn);
+  });
+
+  S.qStart = Date.now();
+  if(S.timed && S.timePerQ>0) {
+    startTimer(S.timePerQ);
+    document.getElementById('timer-ring').style.visibility='visible';
+  } else {
+    document.getElementById('timer-ring').style.visibility='hidden';
+  }
+
+  // Adaptive check
+  if(S.difficulty==='adaptive' && S.qi>0 && S.qi%3===0) adaptDiff();
+}
+
+function adaptDiff() {
+  const recent = S.answers.slice(-3);
+  const correct = recent.filter(a=>!a.timeout&&a.chosen===a.correct).length;
+  let msg = null;
+  if(correct===3 && S.timePerQ>20) {
+    S.timePerQ = Math.max(20, Math.round(S.timePerQ*0.82));
+    msg = `3/3 correct — agent increased difficulty, time reduced to ${S.timePerQ}s`;
+  } else if(correct===0 && S.timePerQ<150) {
+    S.timePerQ = Math.min(150, Math.round(S.timePerQ*1.25));
+    msg = `0/3 correct — agent reduced difficulty, time extended to ${S.timePerQ}s`;
+  }
+  if(msg) {
+    document.getElementById('adapt-text').textContent = msg;
+    document.getElementById('adapt-notice').classList.add('on');
+  }
+}
+
+function startTimer(secs) {
+  S.timeLeft = secs;
+  const arc = document.getElementById('tr-arc'), num = document.getElementById('tr-num');
+  const circ = 131.95;
+  function tick() {
+    const pct = S.timeLeft/secs;
+    arc.style.strokeDashoffset = circ*(1-pct);
+    arc.style.stroke = pct>.5?'var(--blue)':pct>.25?'var(--yellow)':'var(--red)';
+    num.textContent = S.timeLeft;
+    num.style.color = pct>.5?'var(--text)':pct>.25?'var(--yellow)':'var(--red)';
+    if(S.timeLeft<=0) { clearInterval(S.timerInt); timeoutQ(); return; }
+    S.timeLeft--;
+  }
+  tick(); S.timerInt = setInterval(tick,1000);
+}
+
+function timeoutQ() {
+  S.timeouts++;
+  const elapsed = (Date.now()-S.qStart)/1000;
+  S.qTimes.push(elapsed);
+  const q = S.questions[S.qi];
+  S.answers.push({qi:S.qi,chosen:-1,correct:q.correct,timeout:true,time:elapsed,topic:q.topic});
+  document.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  document.querySelectorAll('.opt')[q.correct].classList.add('right');
+  showExplain(q,false,true);
+  document.getElementById('next-btn').style.display='inline-flex';
+  saveMissed(q);
+}
+
+function answerQ(idx) {
+  clearInterval(S.timerInt);
+  const elapsed = (Date.now()-S.qStart)/1000;
+  S.qTimes.push(elapsed);
+  const q = S.questions[S.qi];
+  const ok = idx===q.correct;
+  if(ok) S.score++;
+  S.answers.push({qi:S.qi,chosen:idx,correct:q.correct,timeout:false,time:elapsed,topic:q.topic});
+  document.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  document.querySelectorAll('.opt')[idx].classList.add(ok?'right':'wrong');
+  if(!ok) { document.querySelectorAll('.opt')[q.correct].classList.add('right'); saveMissed(q); }
+  document.getElementById('score-live').textContent = 'Score: '+S.score;
+  showExplain(q,ok,false);
+  document.getElementById('next-btn').style.display='inline-flex';
+}
+
+function saveMissed(q) {
+  const pr = S.progress;
+  if(!pr.missedQ) pr.missedQ = [];
+  pr.missedQ = pr.missedQ.slice(-99);
+  const nextReview = new Date(Date.now() + 3*86400000).toISOString();
+  pr.missedQ.push({...q, nextReview, missedDate: new Date().toISOString()});
+  localStorage.setItem('pe_progress', JSON.stringify(pr));
+}
+
+function showExplain(q, ok, timeout) {
+  const box = document.getElementById('explain');
+  box.innerHTML = `<strong>${timeout?'⏰ Time\'s up!':ok?'✓ Correct!':'✗ Incorrect'}</strong> ${q.explanation}${q.sat_tip?`<div class="sat-tip"><strong>💡 Exam tip:</strong> ${q.sat_tip}</div>`:''}`;
+  box.classList.add('on');
+}
+
+function nextQ() { S.qi++; if(S.qi>=S.questions.length) finishQuiz(); else renderQ(); }
+
+// ══════════════════════════════
+// RESULTS
+// ══════════════════════════════
+async function finishQuiz() {
+  clearInterval(S.timerInt);
+  const total = S.questions.length, pct = Math.round((S.score/total)*100);
+  const avgTime = S.qTimes.length ? Math.round(S.qTimes.reduce((a,b)=>a+b,0)/S.qTimes.length) : 0;
+
+  // Save progress
+  const pr = S.progress;
+  pr.totalQ = (pr.totalQ||0)+total;
+  pr.totalCorrect = (pr.totalCorrect||0)+S.score;
+  if(!pr.topicStats) pr.topicStats={};
+  if(!pr.topicStats[S.exam]) pr.topicStats[S.exam]={};
+  if(S.topic) pr.topicStats[S.exam][S.topic]=pct;
+  if(!pr.sessions) pr.sessions=[];
+  pr.sessions.push({date:Date.now(),exam:S.exam,topic:S.topic,pct,count:total,difficulty:S.difficulty});
+  const today = new Date().toDateString();
+  if(pr.lastDate!==today) { pr.streak=(pr.streak||0)+1; pr.lastDate=today; }
+  localStorage.setItem('pe_progress', JSON.stringify(pr));
+
+  // Render
+  document.getElementById('r-pct').textContent = pct+'%';
+  const hs = [[90,'Outstanding!','Near-perfect score. You\'re ready for exam day.'],[75,'Strong work','A few areas to reinforce before test day.'],[60,'Good effort','Consistent practice will close the gap.'],[0,'Keep going','Every session builds your skills.']];
+  const [,h,t] = hs.find(([m])=>pct>=m);
+  document.getElementById('r-headline').textContent = h;
+  document.getElementById('r-tagline').textContent = t;
+  const arc = document.getElementById('r-arc');
+  arc.style.transition='stroke-dashoffset .9s ease';
+  arc.style.stroke = pct>=75?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
+  setTimeout(()=>arc.style.strokeDashoffset=289.03*(1-pct/100),80);
+
+  document.getElementById('rk-correct').textContent = S.score+'/'+total;
+  document.getElementById('rk-time').textContent = avgTime+'s';
+  document.getElementById('rk-timeout').textContent = S.timeouts;
+  document.getElementById('rk-streak').textContent = (pr.streak||1)+'🔥';
+
+  // Score projection
+  const allAcc = pr.totalQ ? Math.round((pr.totalCorrect/pr.totalQ)*100) : pct;
+  const satEst = estimateSAT(allAcc, pr.totalQ);
+  if(satEst && S.profile?.exams?.includes('SAT')) {
+    document.getElementById('score-proj').style.display='block';
+    const target = S.profile.targetScore||800;
+    document.getElementById('sp-bars').innerHTML = `
+      <div class="sp-row"><div class="sp-lbl">Current estimate</div><div class="sp-track"><div class="sp-fill" style="width:${((satEst-200)/600)*100}%;background:var(--blue)"></div></div><div class="sp-val" style="color:var(--blue)">${satEst}</div></div>
+      <div class="sp-row"><div class="sp-lbl">Your target</div><div class="sp-track"><div class="sp-fill" style="width:${((target-200)/600)*100}%;background:var(--purple)"></div></div><div class="sp-val" style="color:var(--purple)">${target}</div></div>`;
+  }
+
+  // Spaced repetition notice
+  const missedCount = S.answers.filter(a=>a.chosen!==a.correct||a.timeout).length;
+  if(missedCount>0) {
+    document.getElementById('sr-notice').style.display='block';
+    document.getElementById('sr-notice').innerHTML = `<strong>${missedCount} missed question${missedCount>1?'s':''} added to spaced repetition</strong> — PrepEdge will remind you to review them in 3 days to lock them into long-term memory.`;
+  }
+
+  // Review list
+  const rl = document.getElementById('review-list');
+  rl.innerHTML='';
+  S.answers.forEach(a => {
+    const q = S.questions[a.qi];
+    const st = a.timeout?'to':a.chosen===a.correct?'ok':'bad';
+    const icon = st==='ok'?'✓':st==='to'?'⏰':'✗';
+    const d = document.createElement('div');
+    d.className=`rv ${st}`;
+    d.innerHTML=`<div class="rv-icon">${icon}</div><div style="flex:1">
+      <div class="rv-q">${q.question}</div>
+      <div class="rv-d">${st==='to'?'Timed out — ':st==='bad'?`You: ${q.options[a.chosen]?.replace(/^[A-D]\)\s*/,'')||'—'} — `:''}Correct: <span>${q.options[a.correct].replace(/^[A-D]\)\s*/,'')}</span></div>
+      <div class="rv-t">${a.time.toFixed(1)}s · ${q.explanation?.substring(0,90)}…</div>
+    </div>`;
+    rl.appendChild(d);
+  });
+
+  showPage('results');
+
+  // Agent feedback
+  document.getElementById('fb-card').style.display='block';
+  document.getElementById('fb-body').innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  generateFeedback(pct, avgTime);
+}
+
+async function generateFeedback(pct, avgTime) {
+  const p = S.profile;
+  const wrong = S.answers.filter(a=>a.chosen!==a.correct&&!a.timeout).map(a=>S.questions[a.qi]?.topic||S.topic).filter(Boolean);
+  try {
+    const fb = await api([{role:'user',content:`You are PrepEdge, a concise SAT & AP Math coach.
+Student: Grade ${p?.grade||11}, target ${p?.targetScore||800} SAT, exams: ${p?.exams?.map(e=>EXAM_LABELS[e]).join(', ')||'SAT Math'}.
+Quiz result: ${pct}% on ${EXAM_LABELS[S.exam]||'Math'} · ${S.topic||'mixed'} · ${S.difficulty}. Avg time: ${avgTime}s. Timed out: ${S.timeouts}.
+${wrong.length?'Missed topics: '+[...new Set(wrong)].join(', '):'All correct.'}
+Write 3-4 sentences of direct, specific coaching. What they did well, the exact gap to address, and one concrete next step. No filler.`}], 220);
+    document.getElementById('fb-body').innerHTML = fmt(fb);
+  } catch(e) { document.getElementById('fb-card').style.display='none'; }
+}
+
+function reviewWithTutor() {
+  const wrong = S.answers.filter(a=>a.chosen!==a.correct||a.timeout).slice(0,3);
+  if(!wrong.length) { showPage('tutor'); return; }
+  const qs = wrong.map(a=>S.questions[a.qi].question).join('\n');
+  S.tutorHistory = [{role:'user',content:`I just finished a quiz on ${EXAM_LABELS[S.exam]} and got these wrong:\n${qs}\nCan you help me understand them?`}];
+  showPage('tutor');
+  sendTutor(true);
+}
+
+// ══════════════════════════════
+// TUTOR
+// ══════════════════════════════
+function tutorKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendTutor();} }
+function grow(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function useHint(el) { document.getElementById('tutor-ta').value=el.textContent; sendTutor(); }
+
+async function sendTutor(auto) {
+  const ta = document.getElementById('tutor-ta');
+  const text = auto ? S.tutorHistory[0]?.content : ta.value.trim();
+  if(!text) return;
+  if(!auto) { ta.value=''; ta.style.height='auto'; }
+  if(!auto) addMsg('user', text);
+  if(!auto) S.tutorHistory.push({role:'user',content:text});
+
+  const typdiv = addTyping();
+  const ctx = document.getElementById('tutor-ctx').value;
+  const p = S.profile;
+  const sys = `You are PrepEdge, an expert ${ctx||'SAT & AP Math'} tutor.
+Student: Grade ${p?.grade||11}, preparing for ${(p?.exams||['SAT']).map(e=>EXAM_LABELS[e]).join(', ')}, target ${p?.targetScore||800}, weak areas: ${p?.weakAreas?.join(', ')||'none'}.
+Explain clearly. Show every step for math problems. Connect to exam context. Use examples. Be direct and encouraging.
+For step-by-step solutions, format each step on a new line starting with "Step N:".`;
+  try {
+    const reply = await api(S.tutorHistory, 900, sys);
+    S.tutorHistory.push({role:'assistant',content:reply});
+    if(S.tutorHistory.length>20) S.tutorHistory=S.tutorHistory.slice(-16);
+    typdiv.remove();
+    addMsg('ai', reply);
+  } catch(e) { typdiv.remove(); addMsg('ai','Connection error. Please try again.'); }
+}
+
+function addMsg(role, text) {
+  const wrap = document.getElementById('tutor-msgs');
+  const d = document.createElement('div');
+  if(role==='user') { d.className='msg-u'; d.textContent=text; }
+  else {
+    d.className='msg-a-wrap';
+    d.innerHTML=`<div class="msg-a-meta"><div class="ai-av">P</div><div class="ai-name">PrepEdge</div></div><div class="msg-a-body">${fmt(text)}</div>`;
+  }
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return d;
+}
+
+function addTyping() {
+  const wrap = document.getElementById('tutor-msgs');
+  const d = document.createElement('div');
+  d.className='msg-a-wrap';
+  d.innerHTML=`<div class="msg-a-meta"><div class="ai-av">P</div><div class="ai-name">PrepEdge</div></div><div class="msg-a-body"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  wrap.appendChild(d); wrap.scrollTop=wrap.scrollHeight; return d;
+}
+
+function clearTutor() {
+  S.tutorHistory=[];
+  document.getElementById('tutor-msgs').innerHTML=`<div class="msg-a-wrap"><div class="msg-a-meta"><div class="ai-av">P</div><div class="ai-name">PrepEdge</div></div><div class="msg-a-body">Chat cleared. What do you want to work on?</div></div>`;
+}
+
+function fmt(t) {
+  return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/`(.*?)`/g,'<code>$1</code>').replace(/Step (\d+):/g,'<br><strong>Step $1:</strong>').replace(/\n\n/g,'</p><p style="margin-top:10px">').replace(/\n/g,'<br>');
+}
+
+// ══════════════════════════════
+// PROGRESS
+// ══════════════════════════════
+function renderProgress() {
+  const pr = S.progress, el = document.getElementById('prog-body');
+  if(!pr.sessions?.length) { el.innerHTML='<div class="empty-state">No sessions yet. Complete a quiz to see your progress.</div>'; return; }
+  const byExam={};
+  pr.sessions.forEach(s=>{if(!byExam[s.exam])byExam[s.exam]=[];byExam[s.exam].push(s.pct);});
+  let html='<div class="prog-section"><div class="prog-sec-title">Performance by exam</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:8px;margin-bottom:24px">';
+  Object.entries(byExam).forEach(([exam,scores])=>{
+    const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+    const color=avg>=75?'var(--green)':avg>=50?'var(--yellow)':'var(--red)';
+    html+=`<div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:15px"><div style="font-size:21px;font-weight:600;font-family:'Space Grotesk',sans-serif;color:${color};margin-bottom:4px">${avg}%</div><div style="font-size:12px;font-weight:500;margin-bottom:2px">${EXAM_LABELS[exam]||exam}</div><div style="font-size:11px;color:var(--t2)">${scores.length} session${scores.length>1?'s':''}</div></div>`;
+  });
+  html+='</div></div><div class="prog-section"><div class="prog-sec-title">Recent sessions</div>';
+  [...pr.sessions].reverse().slice(0,15).forEach(s=>{
+    const d=new Date(s.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const color=s.pct>=75?'var(--green)':s.pct>=50?'var(--yellow)':'var(--red)';
+    html+=`<div class="hi"><div class="hi-score" style="color:${color};border:1px solid ${color}22">${s.pct}%</div><div class="hi-info"><div class="hi-title">${EXAM_LABELS[s.exam]||s.exam}${s.topic?' · '+s.topic:''}</div><div class="hi-meta">${s.difficulty} · ${s.count} questions · ${d}</div></div></div>`;
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+// ══════════════════════════════
+// SETTINGS
+// ══════════════════════════════
+function loadSettings() {
+  if(!S.profile) return;
+  const p=S.profile;
+  document.getElementById('set-name').value=p.name||'';
+  document.getElementById('set-grade').value=p.grade||'11';
+  document.getElementById('set-target').value=p.targetScore||'800';
+  if(p.examDate) document.getElementById('set-date').value=p.examDate;
+  document.getElementById('set-exams').innerHTML=Object.keys(EXAM_LABELS).map(e=>`<div class="chip ${p.exams?.includes(e)?'on':''}" onclick="this.classList.toggle('on')" data-e="${e}">${EXAM_LABELS[e]}</div>`).join('');
+  document.getElementById('set-weak').innerHTML=WEAK_ALL.map(w=>`<div class="chip ${p.weakAreas?.includes(w)?'on':''}" onclick="this.classList.toggle('on')" data-w="${w}">${w}</div>`).join('');
+}
+
+function saveProfile() {
+  const exams=[...document.querySelectorAll('#set-exams .chip.on')].map(c=>c.dataset.e);
+  S.profile={...S.profile,name:document.getElementById('set-name').value.trim()||S.profile?.name,grade:document.getElementById('set-grade').value,exams:exams.length?exams:S.profile?.exams,weakAreas:[...document.querySelectorAll('#set-weak .chip.on')].map(c=>c.dataset.w),targetScore:parseInt(document.getElementById('set-target').value)||800,examDate:document.getElementById('set-date').value};
+  localStorage.setItem('pe_profile',JSON.stringify(S.profile));
+  alert('Profile saved!');
+}
+
+function resetAll() {
+  if(confirm('Reset all data? Cannot be undone.')) { localStorage.clear(); location.reload(); }
+}
+
+// ══════════════════════════════
+// API
+// ══════════════════════════════
+async function api(messages, maxTokens, sys) {
+  const msgs = sys ? [{role:'system',content:sys},...messages] : messages;
+  const r = await fetch('/api/chat', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({messages:msgs,max_tokens:maxTokens||1000,temperature:0.7})
+  });
+  if(!r.ok) throw new Error('API '+r.status);
+  const data = await r.json();
+  return data.choices[0].message.content;
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ══════════════════════════════
+// PWA
+// ══════════════════════════════
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); S.deferredInstall=e;
+  document.getElementById('install-banner').classList.add('show');
+  document.getElementById('install-btn').onclick = () => {
+    S.deferredInstall.prompt();
+    S.deferredInstall.userChoice.then(()=>document.getElementById('install-banner').classList.remove('show'));
+  };
+});
+
+// ══════════════════════════════
+// INIT
+// ══════════════════════════════
+if(S.profile) showPage('dashboard'); else showPage('onboarding');
+</script>
+</body>
+</html>
